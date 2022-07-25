@@ -3,12 +3,8 @@ version: 2.1
 jobs:
   build:
     working_directory: ~/flask_sample
-    docker:
-      - image: circleci/python:3.8.1
     steps:
       - checkout
       - run:
-        command: sudo pip install -r requirements.txt
-      - run:
-        command: nosetests test/test_sample.py
-  
+        name: Run tests
+        command: python -m pytest

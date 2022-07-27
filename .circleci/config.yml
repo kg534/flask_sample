@@ -1,5 +1,5 @@
 version: 2.1
-
+# tokutei-data-platformのやつをコピーして試してみる
 jobs:
   build:
     docker:

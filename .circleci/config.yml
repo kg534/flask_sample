@@ -19,10 +19,7 @@ jobs:
       id-token: "write"
 
     steps:
-      - uses: "actions/checkout@v3"
-
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -31,7 +28,6 @@ jobs:
           curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 
       - name: Cache Poetry virtualenv
-        uses: actions/chche@v1
         id: cache
         with:
           path: ~/.virtualenvs

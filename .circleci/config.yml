@@ -20,29 +20,29 @@ jobs:
 
     steps:
       - name: Set up Python ${{ matrix.python-version }}
-        with:
-          python-version: ${{ matrix.python-version }}
+          with:
+              python-version: ${{ matrix.python-version }}
 
       - name: Install Poetry (use preview version as a temporary workaround)
-        run: |
-          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+          run: |
+              curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 
       - name: Cache Poetry virtualenv
-        id: cache
-        with:
-          path: ~/.virtualenvs
-          key: poetry-v1-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          id: cache
+          with:
+              path: ~/.virtualenvs
+              key: poetry-v1-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
       
       - name: Set Poetry config
-        run: |
-          poetry config virtualenvs.in-project false
-          poetry config virtualenvs.path ~/.virtualenvs
+          run: |
+              poetry config virtualenvs.in-project false
+              poetry config virtualenvs.path ~/.virtualenvs
 
       - name: Install Dependencies
-        run: |
-          poetry install -vv
-        if: steps.cache.outputs.cache-hit != "true"
+          run: |
+              poetry install -vv
+          if: steps.cache.outputs.cache-hit != "true"
       
       - name: Test Python
-        run: |
-          poetry run pytest tests -vv
+          run: |
+              poetry run pytest tests -vv

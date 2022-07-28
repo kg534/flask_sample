@@ -1,0 +1,52 @@
+name: test-python
+
+on:
+  pull_requedst:
+    branches: [master]
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    name: test-python
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+      - uses: "actions/checkout@v3"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Poetry (use preview version as a temporary workaround)
+        run: |
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+
+      - name: Cache Poetry virtualenv
+        uses: actions/chche@v1
+        id: cache
+        with:
+          path: ~/.virtualenvs
+          key: poetry-v1-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      
+      - name: Set Poetry config
+        run: |
+          poetry config virtualenvs.in-project false
+          poetry config virtualenvs.path ~/.virtualenvs
+
+      - name: Install Dependencies
+        run: |
+          poetry install -vv
+        if: steps.cache.outputs.cache-hit != "true"
+      
+      - name: Test Python
+        run: |
+          poetry run pytest tests -vv
